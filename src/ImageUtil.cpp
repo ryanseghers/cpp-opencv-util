@@ -9,6 +9,7 @@
 
 #include <fmt/core.h>
 #include <opencv2/opencv.hpp>
+#include <opencv2/core/utils/logger.hpp>
 
 #include "ImageUtil.h"
 #include "MiscUtil.h"
@@ -73,8 +74,12 @@ namespace CppOpenCVUtil
     {
         void init()
         {
+            // clear debug images
             std::regex pattern("^\\d{3}_.+\\.tif$");
             delete_matching_files(tempDir, pattern);
+
+            // turn down verbosity
+            cv::utils::logging::setLogLevel(cv::utils::logging::LogLevel::LOG_LEVEL_WARNING);
         }
 
         // all possible extensions, but all platforms do not support all image types
