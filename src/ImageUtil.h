@@ -65,5 +65,52 @@ namespace CppOpenCVUtil
         void profile(cv::Mat& img, bool doVert, std::vector<float>& profile);
 
         cv::Scalar computeTextColor(cv::Mat& img, cv::Point pixel);
+
+        /**
+         * @brief Calls create, but also returns whether anything changed.
+         */
+        bool ensureMat(cv::Mat& mat, int nRows, int nCols, int type);
+
+        /**
+         * @brief Set pixel values to their column indices.
+         * @param img 
+         */
+        template <typename T>
+        void setToColIndices(cv::Mat& img)
+        {
+            int rows = img.rows;
+            int cols = img.cols;
+
+            for (int r = 0; r < rows; r++) 
+            {
+                T* ptr = img.ptr<T>(r);
+
+                for (int c = 0; c < cols; c++)
+                {
+                    ptr[c] = static_cast<T>(c);
+                }
+            }
+        }
+
+        /**
+        * @brief Set pixel values to their row indices.
+        * @param img 
+        */
+        template <typename T>
+        void setToRowIndices(cv::Mat& img)
+        {
+            int rows = img.rows;
+            int cols = img.cols;
+
+            for (int r = 0; r < rows; r++) 
+            {
+                T* ptr = img.ptr<T>(r);
+
+                for (int c = 0; c < cols; c++)
+                {
+                    ptr[c] = static_cast<T>(r);
+                }
+            }
+        }
     }
 }

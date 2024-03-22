@@ -22,7 +22,7 @@ using namespace CppBaseUtil;
 
 namespace CppOpenCVUtil
 {
-    std::string tempDir = "C:/Temp";
+    std::string tempDir = "C:/Temp/Images";
 
     // Function to delete files with the specified pattern from a given directory
     bool delete_matching_files(const std::string& directory, const std::regex& pattern)
@@ -489,9 +489,13 @@ namespace CppOpenCVUtil
             {
                 return std::string("8U");
             }
-            else if (type == CV_32F)
+            else if ((type == CV_32F) || (type == CV_32FC1))
             {
                 return std::string("32F");
+            }
+            else if (type == CV_32FC3)
+            {
+                return std::string("32FC3");
             }
             else if (type == CV_32S)
             {
@@ -945,5 +949,18 @@ namespace CppOpenCVUtil
 
             return text_color;
         }
-    } // namespace ImageUtil
+
+        bool ensureMat(cv::Mat& mat, int nRows, int nCols, int type)
+        {
+            if (mat.rows != nRows || mat.cols != nCols || mat.type() != type)
+            {
+                mat.create(nRows, nCols, type);
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+    }
 }
