@@ -50,6 +50,7 @@ namespace CppOpenCVUtil
         std::string getImageTypeString(cv::Mat& img);
         std::string getImageDescString(cv::Mat& img);
         std::string getPixelValueString(cv::Mat& img, cv::Point2i pt);
+        void printMatInfo(cv::Mat& mat);
 
         void imgTo8u(cv::Mat& img, cv::Mat& dst, float lowVal = 0.0f, float highVal = 0.0f);
         void imgToRgb(cv::Mat& img8u, uint8_t* dst);
@@ -70,6 +71,8 @@ namespace CppOpenCVUtil
          * @brief Calls create, but also returns whether anything changed.
          */
         bool ensureMat(cv::Mat& mat, int nRows, int nCols, int type);
+
+        void zeroOutsideRoi(cv::Mat& mat, const cv::Rect& roi);
 
         /**
          * @brief Set pixel values to their column indices.

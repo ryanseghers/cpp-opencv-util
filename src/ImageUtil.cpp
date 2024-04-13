@@ -503,10 +503,11 @@ namespace CppOpenCVUtil
             }
             else if (type == CV_8UC3)
             {
-                return std::string("RGB");
+                return std::string("8UC3");
             }
             else if (type == CV_8UC4)
             {
+                // or BGRA
                 return std::string("ARGB");
             }
             else
@@ -961,6 +962,41 @@ namespace CppOpenCVUtil
             {
                 return false;
             }
+        }
+
+        void printMatInfo(cv::Mat& mat)
+        {
+            fmt::print("rows: {}\n", mat.rows);
+            fmt::print("cols: {}\n", mat.cols);
+            fmt::print("channels: {}\n", mat.channels());
+            fmt::print("type: {} {}\n", mat.type(), ImageUtil::getImageTypeString(mat));
+            fmt::print("elemSize: {}\n", mat.elemSize());
+            fmt::print("step[0]: {} (bytes, step to next row)\n", mat.step[0]);
+            fmt::print("step[1]: {} (bytes, step to next col)\n", mat.step[1]);
+            fmt::print("step1: {} (not bytes, not elements, but values e.g. single float for 3-channel float image)\n", mat.step1());
+            fmt::print("calculated stride: {} (elements)\n", mat.step[0] / mat.elemSize());
+            fmt::print("isContinuous: {}\n", mat.isContinuous());
+        }
+
+        void zeroOutsideRoi(cv::Mat& mat, const cv::Rect& roi)
+        {
+            CV_Assert(mat.type() == CV_32F);
+            CV_Assert(roi.x >= 0 && roi.y >= 0 && roi.x + roi.width <= mat.cols && roi.y + roi.height <= mat.rows);
+
+            // Create a mask with the same size as the input mat, initialized with zeros
+            cv::Mat mask(mat.size(), CV_8U, cv::Scalar(0));
+
+            // Set the ROI region in the mask to white (255)
+            mask(roi) = 255;
+
+            //// Create a copy of the input mat
+            //cv::Mat result = mat.clone();
+
+            // Set the elements outside the ROI to zero using the mask
+            mat.setTo(0, ~mask);
+
+            //// Copy the result back to the input mat
+            //result.copyTo(mat);
         }
     }
 }
